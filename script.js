@@ -5,7 +5,7 @@ let case_plateau =
                 ["F1","F2","F3","F4","F5","F6","F7","F8"],
                 ["E1","E2","E3","E4","E5","E6","E7","E8"],
                 ["D1","D2","D3","D4","D5","D6","D7","D8"],
-                ["C1","2C","C3","C4","C5","C6","7C","8C"],
+                ["C1","C2","C3","C4","C5","C6","C7","C8"],
                 ["B1","B2","B3","B4","B5","B6","B7","B8"],
                 ["A1","A2","A3","A4","A5","A6","A7","A8"]
             ]
@@ -25,8 +25,11 @@ let case_plateau_pion =
 
 //transforme tour-blanc-1 --> tour-blanc
 let caseTableauToNameImage = function(nom_case){
-    let tab = nom_case.split('-')
-    let res = tab[0]+"-"+tab[1]
+    let res ="vide"
+    if(nom_case!="vide"){
+        let tab = nom_case.split('-')
+        res = tab[0]+"-"+tab[1]
+    }
     return res
 }
 
@@ -42,10 +45,51 @@ let afficherPlateau = function(){
                 let chemin_image = `./images/${caseTableauToNameImage(pion)}.png`
                 elt_image.src=chemin_image
             }
+            //sinon on affiche rien
+            else{
+                let elt_image_vide = document.querySelector(`#${name_case} img`)
+                elt_image_vide.src=""
+            }
         }
     }
 }
-
 afficherPlateau()
+
+
+//retourne position d'une case exemple : H1 --> [0,0]
+let coordonneeCase = function(name_case){
+    let res = []
+    for(let l = 0; l < case_plateau.length; l++){
+        for(let c = 0; c < case_plateau[l].length; c++) {
+            if(case_plateau[l][c]==name_case){
+                res.push(c)
+                res.push(l)
+            }
+        }
+    }
+    return res
+}
+
+//deplace un pion d'une case à une autre
+let deplacerPion = function(case_dep, case_arr){
+    let [x_dep, y_dep] = coordonneeCase(case_dep)
+    let [x_arr, y_arr] = coordonneeCase(case_arr)
+    if(case_dep != case_arr){
+        //on change le pion de case
+        case_plateau_pion[y_arr][x_arr]=case_plateau_pion[y_dep][x_dep]
+        //on met la case initiale à vide
+        case_plateau_pion[y_dep][x_dep] = "vide"
+    }
+    afficherPlateau()
+}
+deplacerPion("G1","F1")
+deplacerPion("H2","F3")
+
+//mouvement possible --> renvoie touts les positions ou peut aller une pièce
+
+
+
+
+
 
 
